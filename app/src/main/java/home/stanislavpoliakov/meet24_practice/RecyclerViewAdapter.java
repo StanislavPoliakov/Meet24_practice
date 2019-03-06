@@ -12,6 +12,10 @@ import android.widget.ImageView;
 
 import java.util.List;
 
+/**
+ * Адаптер для RecyclerView
+ * Не хочу комментировать в который раз этот класс
+ */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
     private static final String TAG = "meet24_logs";
     private List<Bitmap> data;

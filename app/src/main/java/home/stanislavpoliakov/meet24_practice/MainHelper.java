@@ -8,25 +8,39 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Класс инициализации начальных значений
+ * Здесь мы определяем список адресов картинок, формируем Url и загружаем данные
+ */
 public class MainHelper {
     private static final String TAG = "meet24_logs";
     private Set<String> resourceSet;
 
+    /**
+     * Основной метод для получения коллекции картинок
+     * @return коллекция картинок, загруженных из сети
+     */
     public Set<Bitmap> getCollection() {
+
+        // Инициализируем множество адресов
         initResourceSet();
+
+        // В Stream'-е коллекции трансформируем адрес в URL, загружаем картинку и сохраняем результат
+        // в множестве картинок, которое и возвращаем
         return resourceSet.stream().parallel()
                 .map(this::stringToUrl)
                 .map(this::getBitmap)
                 .collect(Collectors.toSet());
-        //return null;
     }
 
+    /**
+     * Метод инициализации множества адресов.
+     * На данном этапе адреса хранятся в строках (скопированных из адресной строки браузера)
+     */
     private void initResourceSet() {
         resourceSet = new HashSet<>();
         resourceSet.add("https://images.pexels.com/photos/443446/pexels-photo-443446.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
@@ -49,35 +63,44 @@ public class MainHelper {
         resourceSet.add("https://images.pexels.com/photos/70741/cereals-field-ripe-poppy-70741.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500");
         resourceSet.add("https://images.pexels.com/photos/132419/pexels-photo-132419.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500");
         resourceSet.add("https://images.pexels.com/photos/35627/shells-massage-therapy-sand.jpg?auto=compress&cs=tinysrgb&dpr=2&w=500");
-        Log.d(TAG, "initResourceSet: set.size = " + resourceSet.size());
     }
 
+    /**
+     * Метод конвертации адреса в формате String в адрес в формате URL
+     * @param stringUrl адрес в формате String
+     * @return адрес в формате URL
+     */
     private URL stringToUrl(String stringUrl) {
         URL url = null;
         try {
             url = new URL(stringUrl);
         } catch (MalformedURLException ex) {
-            //Log.d(TAG, "stringToUrl: ERROR");
             ex.printStackTrace();
         }
-        //Log.d(TAG, "stringToUrl: URL = " + url);
         return url;
     }
 
+    /**
+     * Метод загрузки картинки из сети по данному url
+     * @param url адрес картинки
+     * @return картинка в формате Bitmap
+     */
     private Bitmap getBitmap(URL url) {
+        HttpURLConnection connection = null;
         try {
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+            connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             int responseCode = connection.getResponseCode();
-            //Log.d(TAG, "getBitmap: responseCode = " + responseCode);
+
+            //200 - OK
             if (responseCode == 200) {
-                //Log.d(TAG, "getBitmap: ");
                 return BitmapFactory.decodeStream(connection.getInputStream());
             }
-            connection.disconnect();
         } catch (IOException ex) {
             ex.printStackTrace();
+        } finally {
+            // Закрываем открытое соединение в блоке finally
+            if (connection != null) connection.disconnect();
         }
         return null;
     }

@@ -1,6 +1,5 @@
 package home.stanislavpoliakov.meet24_practice;
 
-
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -103,7 +102,7 @@ public class SlideViewPagerFragment extends DialogFragment {
             // Получаем в процессе зума коэфициент увеличения
             // Если увеличиваем изображение - getScaleFactor > 1,
             // если уменьшаем - < 1
-            // Меняем общий коэффициент на полученные в результате жеста
+            // Меняем общий коэффициент на полученный в результате жеста
             mScaleFactor *= mScaleGestureDetector.getScaleFactor();
 
             // Поскольку увелчение картинки у нас стоит 15% (1.15f), то и значения, которые

@@ -64,6 +64,9 @@ public class ContainerFragment extends DialogFragment {
         // Устанавливаем значение расстояния между слайдами
         viewPager.setPageMargin(8);
 
+        // Устанавливаем наш трансформер для слайдов
+        viewPager.setPageTransformer(false, new AlphaPageTransformer());
+
         // Получаем значение текущий позиции из аргументов фрагмета. Это номер элемента в коллекции
         // данных = номер элемента в списке RecyclerView = номер слайда в ViewPager
         Bundle bundle = getArguments();
